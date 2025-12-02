@@ -1,0 +1,11 @@
+# / .gitignore
+node_modules
+.env
+services/*/.env
+services/*/node_modules
+.env.local
+.vscode
+.DS_Store
+dist
+dist-ssr
+*.local

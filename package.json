@@ -1,0 +1,24 @@
+{
+  "name": "sain-vande-bharat-admin",
+  "version": "1.0.0",
+  "description": "na",
+  "main": "index.js",
+  "scripts": {
+    "start:auth": "cd auth-service && npm start",
+    "start:shop": "cd shop-service && npm start",
+    "start": "concurrently \"npm run start:auth\" \"npm run start:shop\"",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "kartik maandothiya",
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
+    "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  }
+}
