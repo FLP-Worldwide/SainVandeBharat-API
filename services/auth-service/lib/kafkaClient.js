@@ -4,7 +4,7 @@ const { Kafka } = require('kafkajs');
 let producer = null;
 
 async function initKafka() {
-  const brokers = process.env.KAFKA_BROKERS;
+  const brokers = process.env.KAFKA_BROKERS || '';
   if (!brokers) {
     console.log('KAFKA_BROKERS not set — skipping kafka init');
     return;

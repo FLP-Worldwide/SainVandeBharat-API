@@ -1,24 +1,18 @@
-# services/<service-name>/Dockerfile
 FROM node:20-alpine
 
-# Create app directory
 WORKDIR /usr/src/app
 
-# Install app dependencies
-# A package.json must exist in each service folder
-COPY package*.json ./
-RUN npm ci --only=production
+COPY services/user-service/package*.json ./services/user-service/
+RUN cd services/user-service && npm ci --only=production
 
-# Copy source
-COPY . .
+COPY services/user-service ./services/user-service
+COPY shared ./shared
 
-# Expose (allow override via env)
-ARG PORT=3000
-ENV PORT=${PORT}
+WORKDIR /usr/src/app/services/user-service
 
-# Use non-root user for better security (optional)
-RUN addgroup -S appgroup && adduser -S appuser -G appgroup
-USER appuser
+ENV NODE_ENV=production
+ENV PORT=4100
 
-# Start command (services should have a start script in package.json)
+EXPOSE 4100
+
 CMD ["node", "server.js"]

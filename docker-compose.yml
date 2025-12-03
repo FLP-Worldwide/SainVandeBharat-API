@@ -1,131 +1,39 @@
-version: '3.8'
 services:
-  zookeeper:
-    image: bitnami/zookeeper:latest
-    environment:
-      - ALLOW_ANONYMOUS_LOGIN=yes
-    ports:
-      - "2181:2181"
-
-  kafka:
-    image: bitnami/kafka:latest
-    environment:
-      - KAFKA_BROKER_ID=1
-      - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
-      - ALLOW_PLAINTEXT_LISTENER=yes
-      - KAFKA_CFG_LISTENERS=PLAINTEXT://:9092
-      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9092
-    depends_on:
-      - zookeeper
-    ports:
-      - "9092:9092"
-
-  mongo:
-    image: mongo:6
-    restart: unless-stopped
-    volumes:
-      - mongo-data:/data/db
-    ports:
-      - "27017:27017"
-
   redis:
     image: redis:7
     ports:
       - "6379:6379"
 
-  # Auth service
   auth-service:
     build:
-      context: ./services/auth-service
+      context: .
+      dockerfile: ./services/auth-service/Dockerfile
     env_file:
       - ./services/auth-service/.env
+    depends_on:
+      - redis
     ports:
       - "4000:4000"
-    depends_on:
-      - mongo
-      - redis
-      - kafka
 
-  # User service (example)
   user-service:
     build:
-      context: ./services/user-service
+      context: .
+      dockerfile: ./services/user-service/Dockerfile
     env_file:
       - ./services/user-service/.env
+    depends_on:
+      - redis
     ports:
       - "4100:4100"
-    depends_on:
-      - mongo
-      - redis
-      - kafka
 
-  # Shop + orders
-  shop-service:
-    build:
-      context: ./services/shop-service
-    env_file:
-      - ./services/shop-service/.env
-    ports:
-      - "4200:4200"
-    depends_on:
-      - mongo
-      - redis
-      - kafka
-
-  # Matrimonial
-  matrimonial-service:
-    build:
-      context: ./services/matrimonial-service
-    env_file:
-      - ./services/matrimonial-service/.env
-    ports:
-      - "4300:4300"
-    depends_on:
-      - mongo
-      - redis
-      - kafka
-
-  # Education
-  education-service:
-    build:
-      context: ./services/education-service
-    env_file:
-      - ./services/education-service/.env
-    ports:
-      - "4400:4400"
-    depends_on:
-      - mongo
-      - redis
-      - kafka
-
-  # Community & feeds
-  community-service:
-    build:
-      context: ./services/community-service
-    env_file:
-      - ./services/community-service/.env
-    ports:
-      - "4500:4500"
-    depends_on:
-      - mongo
-      - redis
-      - kafka
-
-  # API Gateway (simple)
   gateway:
     build:
-      context: ./services/gateway
+      context: .
+      dockerfile: ./services/gateway/Dockerfile
     env_file:
       - ./services/gateway/.env
-    ports:
-      - "3000:3000"
     depends_on:
       - auth-service
       - user-service
-      - shop-service
-      - community-service
-      - matrimonial-service
-      - education-service
-
-volumes:
-  mongo-data:
+    ports:
+      - "3000:3000"

@@ -10,7 +10,7 @@ const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 
-const MONGO = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/auth';
+const MONGO = process.env.MONGO_URI;
 mongoose.connect(MONGO, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log('Auth service connected to Mongo'))
   .catch(err => {
@@ -20,7 +20,8 @@ mongoose.connect(MONGO, { useNewUrlParser: true, useUnifiedTopology: true })
 
   initKafka().catch(()=>{});
 
-app.get('/health', (req, res) => res.json({ ok: true }));
+    app.get('/', (req, res) => res.json({ service: 'auth-service', status: 'running' }));
+    app.get('/health', (req, res) => res.json({ ok: true }));
 
 // mount auth routes
 const authRoutes = require('./routes/auth');
