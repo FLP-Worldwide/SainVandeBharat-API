@@ -1,7 +1,7 @@
 # / .gitignore
 node_modules
-.env
-services/*/.env
+# .env
+# services/*/.env
 services/*/node_modules
 .env.local
 .vscode

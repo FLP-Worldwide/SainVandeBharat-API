@@ -1,3 +1,5 @@
+version: "3.8"
+
 services:
   redis:
     image: redis:7
@@ -12,6 +14,7 @@ services:
       - ./services/auth-service/.env
     depends_on:
       - redis
+    command: npm run start
     ports:
       - "4000:4000"
 
@@ -23,6 +26,7 @@ services:
       - ./services/user-service/.env
     depends_on:
       - redis
+    command: npm run start
     ports:
       - "4100:4100"
 
@@ -35,5 +39,6 @@ services:
     depends_on:
       - auth-service
       - user-service
+    command: npm run start
     ports:
       - "3000:3000"

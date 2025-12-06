@@ -1,0 +1,9 @@
+{
+  "name": "shared",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": {
+    "jsonwebtoken": "^9.0.3",
+    "lodash": "^4.17.21"
+  }
+}

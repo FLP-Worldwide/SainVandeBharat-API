@@ -18,9 +18,13 @@ mongoose.connect(MONGO, { useNewUrlParser: true, useUnifiedTopology: true })
   });
 
 
-    app.get('/', (req, res) => res.json({ service: 'user-service', status: 'running' }));
-    app.get('/health', (req, res) => res.json({ ok: true }));
+app.get('/', (req, res) => res.json({ service: 'user-service', status: 'running' }));
+app.get('/health', (req, res) => res.json({ ok: true, service: 'user-service', status: 'running' }));
 
+const userRoutes = require('./routes/userProfile');
+const { verifyJWT } = require('../../shared/lib/authMiddleware');
+
+app.use('/user', verifyJWT, userRoutes);
 
 const PORT = process.env.PORT;
 app.listen(PORT, () => console.log(`User service listening on ${PORT}`));

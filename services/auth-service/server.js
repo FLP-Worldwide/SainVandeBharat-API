@@ -18,18 +18,20 @@ mongoose.connect(MONGO, { useNewUrlParser: true, useUnifiedTopology: true })
     // continue running for dev
   });
 
-  initKafka().catch(()=>{});
+initKafka().catch(()=>{});
 
-    app.get('/', (req, res) => res.json({ service: 'auth-service', status: 'running' }));
-    app.get('/health', (req, res) => res.json({ ok: true }));
+app.get('/', (req, res) => res.json({ service: 'auth-service', status: 'running' }));
+app.get('/health', (req, res) => res.json({ ok: true, service: 'auth-service', status: 'running' }));
 
 // mount auth routes
 const authRoutes = require('./routes/auth');
 app.use('/auth', authRoutes);
 
 const profileRoutes = require('./routes/profile');
-const { verifyJWT } = require('./lib/authMiddleware');
+const { verifyJWT } = require('../../shared/lib/authMiddleware');
 app.use('/auth', verifyJWT, profileRoutes); // /auth/me protected
 
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => console.log(`Auth service listening on ${PORT}`));
+
+

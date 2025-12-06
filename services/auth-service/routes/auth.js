@@ -208,7 +208,7 @@ router.post('/complete', async (req, res) => {
     // update/create user details
     let details = await UserDetails.findOne({ userId: new mongoose.Types.ObjectId(userId) });
     if (!details) {
-      details = new UserDetails({ userId: mongoose.Types.ObjectId(userId) });
+      details = new UserDetails({ userId: new mongoose.Types.ObjectId(userId) });
     }
 
     details.name = name;
