@@ -1,0 +1,48 @@
+{
+  "AWSEBDockerrunVersion": 2,
+  "containerDefinitions": [
+    {
+      "name": "redis",
+      "image": "redis:7",
+      "essential": false,
+      "memory": 128,
+      "portMappings": [
+        { "containerPort": 6379 }
+      ]
+    },
+    {
+      "name": "auth-service",
+      "image": "724048197598.dkr.ecr.ap-south-1.amazonaws.com/sainvandebharatapi/auth-service:latest",
+      "essential": true,
+      "memory": 256,
+      "portMappings": [
+        { "containerPort": 4000 }
+      ],
+      "links": ["redis"],
+      "environment": [
+        { "name": "NODE_ENV", "value": "production" },
+        { "name": "MONGO_URI", "value": "mongodb+srv://flpitteam_db_user:d0Ig3MtBn7ltGh4d@flpapps.hs5om3k.mongodb.net/vandebharat?retryWrites=true&w=majority&appName=FLPApps/auth" },
+        { "name": "PORT", "value": "4000" },
+        { "name": "REDIS_HOST", "value": "redis" },
+        { "name": "REDIS_PORT", "value": "6379" }
+      ]
+    },
+    {
+      "name": "user-service",
+      "image": "724048197598.dkr.ecr.ap-south-1.amazonaws.com/sainvandebharatapi/user-service:latest",
+      "essential": false,
+      "memory": 256,
+      "portMappings": [
+        { "containerPort": 4100 }
+      ],
+      "links": ["redis"],
+      "environment": [
+        { "name": "MONGO_URI", "value": "mongodb+srv://flpitteam_db_user:d0Ig3MtBn7ltGh4d@flpapps.hs5om3k.mongodb.net/vandebharat?retryWrites=true&w=majority&appName=FLPApps/auth" },
+        { "name": "NODE_ENV", "value": "production" },
+        { "name": "PORT", "value": "4100" },
+        { "name": "REDIS_HOST", "value": "redis" },
+        { "name": "REDIS_PORT", "value": "6379" }
+      ]
+    }
+  ]
+}

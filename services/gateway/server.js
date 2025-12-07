@@ -1,28 +1,26 @@
-// services/auth-service/server.js
-require('dotenv').config();
 const express = require('express');
-const bodyParser = require('body-parser');
-const mongoose = require('mongoose');
-const cors = require('cors');
-
+const { createProxyMiddleware } = require('http-proxy-middleware');
 
 const app = express();
-app.use(cors());
-app.use(bodyParser.json());
 
-const MONGO = process.env.MONGO_URI;
-mongoose.connect(MONGO, { useNewUrlParser: true, useUnifiedTopology: true })
-  .then(() => console.log('Gateway service connected to Mongo'))
-  .catch(err => {
-    console.error('Mongo err', err && err.message ? err.message : err);
-    // continue running for dev
-  });
+// AUTH SERVICE (port 4000 inside docker network)
+app.use('/auth', createProxyMiddleware({
+  target: 'http://auth-service:4000',
+  changeOrigin: true,
+  // pathRewrite: { '^/auth': '' }
+}));
 
+// USER SERVICE (port 4100)
+app.use('/user', createProxyMiddleware({
+  target: 'http://user-service:4100',
+  changeOrigin: true,
+  // pathRewrite: { '^/user': '' }
+}));
 
+app.get('/', (req, res) => {
+  res.json({ status: "Gateway running" });
+});
 
-    app.get('/', (req, res) => res.json({ service: 'gateway-service', status: 'running' }));
-    app.get('/health', (req, res) => res.json({ ok: true }));
-
-
-const PORT = process.env.PORT;
-app.listen(PORT, () => console.log(`Gateway service listening on ${PORT}`));
+app.listen(3000, "0.0.0.0", () => {
+  console.log("Gateway running on port 3000");
+});
