@@ -7,20 +7,20 @@ const app = express();
 app.use('/auth', createProxyMiddleware({
   target: 'http://auth-service:4000',
   changeOrigin: true,
-  // pathRewrite: { '^/auth': '' }
+  pathRewrite: { '^/auth': '' }
 }));
 
 // USER SERVICE (port 4100)
 app.use('/user', createProxyMiddleware({
   target: 'http://user-service:4100',
   changeOrigin: true,
-  // pathRewrite: { '^/user': '' }
+  pathRewrite: { '^/user': '' }
 }));
 
 app.get('/', (req, res) => {
   res.json({ status: "Gateway running" });
 });
 
-app.listen(3000, "0.0.0.0", () => {
-  console.log("Gateway running on port 3000");
+app.listen(5000, "0.0.0.0", () => {
+  console.log("Gateway running on port 5000");
 });

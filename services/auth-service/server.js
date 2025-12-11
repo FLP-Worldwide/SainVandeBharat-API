@@ -25,11 +25,11 @@ app.get('/health', (req, res) => res.json({ ok: true, service: 'auth-service', s
 
 // mount auth routes
 const authRoutes = require('./routes/auth');
-app.use('/auth', authRoutes);
+app.use('/account', authRoutes);
 
 const profileRoutes = require('./routes/profile');
 const { verifyJWT } = require('../../shared/lib/authMiddleware');
-app.use('/auth', verifyJWT, profileRoutes); // /auth/me protected
+app.use('/account', verifyJWT, profileRoutes); // /auth/me protected
 
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => console.log(`Auth service listening on ${PORT}`));

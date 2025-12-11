@@ -13,6 +13,6 @@ COPY services/gateway ./services/gateway
 
 WORKDIR /usr/src/app/services/gateway
 
-EXPOSE 3000
+EXPOSE 5000
 
 CMD ["npm", "run", "start"]
